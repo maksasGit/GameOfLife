@@ -17,10 +17,9 @@ class World:
         neighbors = np.zeros_like(self.world)
         for curr_neighbors in neighbor_indices:
             neighbors += np.roll(self.world, curr_neighbors, axis=(0, 1))
-        new_world = self.world.copy()
-        mask1 = (self.world == 1) & ((neighbors == 2) | (neighbors == 3))
-        mask2 = (self.world == 0) & (neighbors == 3)
-        new_world[mask1] = 0
-        new_world[mask2] = 1
-        self.world = new_world
+        new_world = np.zeros_like(self.world)
+        new_world[np.logical_and(self.world == 1, np.logical_or(neighbors == 2, neighbors == 3))] = 1
+        new_world[np.logical_and(self.world == 0, neighbors == 3)] = 1
+
+        np.copyto(self.world, new_world)
         return new_world
